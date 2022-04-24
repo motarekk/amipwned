@@ -1,5 +1,5 @@
 # amipwned
-A python tool that uses haveibeenpwned's api, securely offline-check if your password has been leaked before
+A python tool that uses haveibeenpwned's api to securely offline-check if your password has been leaked before
 
 # requirements
 python requests library:
