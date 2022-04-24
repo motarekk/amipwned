@@ -5,7 +5,7 @@ Using haveibeenpwned's api, securely offline-check if your password has been lea
 python requests library:
 
 ### Linux
-$ pip install requests 
+> $ pip install requests 
 
 ### Windows
 > python -m pip install requests
