@@ -4,17 +4,17 @@ Using haveibeenpwned's api, securely offline-check if your password has been lea
 # requirements
 python requests library:
 
-### Linux
+#### Linux
 > $ pip install requests 
 
-### Windows
+#### Windows
 > python -m pip install requests
 
 # usage
 > python amipwned [password]
 
-### example
+#### example
 > python amipwned mypass123
 
-### get help
+#### get help
 > python amipwned --help
