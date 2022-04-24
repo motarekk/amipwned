@@ -1,4 +1,4 @@
-# description
+# amipwned
 Using haveibeenpwned's api, securely offline-check if your password has been leaked before
 
 # requirements
