@@ -11,19 +11,19 @@ https://user-images.githubusercontent.com/104282801/206707045-fdc3d43f-d297-4078
 python requests library:
 
 #### Linux
-> $ pip install requests 
+> > pip install requests 
 
 #### Windows
-> python -m pip install requests
+> > python -m pip install requests
 
 # usage
-> python amipwned -p [PASSWORD] <br />
-> python amipwned -f [FILE]
+> > python amipwned -p [PASSWORD] <br />
+> > python amipwned -f [FILE]
 
 #### example
-> python amipwned -p "password123" <br />
-> python amipwned -p "passwords.txt"
+> > python amipwned -p "password123" <br />
+> > python amipwned -p "passwords.txt"
 
 #### get help
-> python amipwned --help <br />
-> python amipwned -h
+> > python amipwned --help <br />
+> > python amipwned -h
