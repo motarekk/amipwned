@@ -1,37 +1,37 @@
+'''
+amipwned automates the process of using haveibeenpwned's API without exposing your passwords to the internet
+By: Mohamed Tarek - https://www.linkedin.com/in/mohamed-tarek-159a821ba/
+this is version 2.0 of the tool
+'''
+
 import hashlib
 import requests
 import sys
 
+#-------------------- variables --------------------#
 signature = ("""
                  _                              _ 
   __ _ _ __ ___ (_)_ ____      ___ __   ___  __| |
  / _` | '_ ` _ \| | '_ \ \ /\ / / '_ \ / _ \/ _` |
 | (_| | | | | | | | |_) \ V  V /| | | |  __/ (_| |
- \__,_|_| |_| |_|_| .__/ \_/\_/ |_| |_|\___|\__,_|  v.10
+ \__,_|_| |_| |_|_| .__/ \_/\_/ |_| |_|\___|\__,_|  v.20
                   |_|                      motarek
 
                   """)                            
-#help
-if len(sys.argv) < 2:
-    print(signature + "\nby: motarek\nLinkedIn: https://www.linkedin.com/in/mohamed-tarek-159a821ba/\n\n[+]securely offline-check if your password has been leaked before\n\nusage------ python .\\amipwned <password>\nexample------ python .\\amipwned p@$$W0rd")
 
-elif len(sys.argv) == 2 and sys.argv[1] == "--help":
-    print("[+]securely offline-check if your password has been leaked before\n\nusage------ python .\\amipwned <password>\nexample------ python .\\amipwned p@$$W0rd")
+description = "\nBY: Mohamed Tarek\nLinkedIn: https://www.linkedin.com/in/mohamed-tarek-159a821ba/\nGitHub: https://github.com/motarekk/amipwned\n\n>> Securely offline-check if your passwords have been leaked before\n\n"
 
-else:
-    
-    #take password from user
-    password = ""
-    for arg in range(1, len(sys.argv)):
-        password = password + sys.argv[arg]
+help = "> USAGE: python .\\amipwned --help\n         python .\\amipwned -p [PASSWORD]\n         python .\\amipwned -f [PASSWORDS_FILE]\n\n> EXAMPLE: python .\\amipwned -p \"helloworld\"\n           python .\\amipwned -f passwords.txt"
 
-    #hash password
-    hash = hashlib.sha1(password.encode('utf-8'))
-    hashed = hash.hexdigest().upper()
+totalLeaked = 0
+
+#-------------------- main function --------------------#
+def findPassword(password):
+    #hash the password
+    hashed = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
 
     #take first 5 chars of hashed password
     first5 = hashed[0:5]
-
     remaining_hash = hashed[5:len(hashed)]
 
     try:
@@ -60,14 +60,69 @@ else:
 
         #compare each hash in the response with the remaining hashed password
         flag = 0
+        global totalLeaked
         for hash in myarr:
             if hash[0:35] == remaining_hash:
-                print("This password has been leaked " + hash[36:len(hash)] + " times")
+                totalLeaked += 1
+                print(password + " has been leaked " + hash[36:len(hash)] + " times")
                 flag = 1
 
         if flag == 0:
-            print("This password has been leaked 0 times :)")
+            print(password + " has been leaked 0 times")
 
-    #throuh an error if not connected to the internet
+    #through an error if not connected to the internet
     except (requests.ConnectionError, requests.Timeout) as exception:
         print("No internet connection!")
+
+#-------------------- main program --------------------#
+if len(sys.argv) < 2:
+    print(signature + description + help)
+
+elif sys.argv[1] == "--help" or sys.argv[1] == "-h":
+    print(help)
+
+elif sys.argv[1] == "-p":
+    
+    #take password from user
+    password = ""
+
+    for arg in ' '.join(sys.argv[2:]):
+        password = password + arg
+
+    #check if password is empty
+    if password == "":
+        print("Please enter a password!")
+        exit()
+
+    findPassword(password)
+
+elif sys.argv[1] == "-f":
+    
+    #take file from user
+    file = ""
+
+    for arg in ' '.join(sys.argv[2:]):
+        file = file + arg
+
+    #check if no file has been entered
+    if file == "":
+        print("Please enter a file!")
+        exit()
+
+    try:
+        #read the file
+        f = open(file, "r")
+
+        #loop through the lines and search for each password
+        for i in f.readlines():
+            findPassword(i[:len(i)-1])
+
+        #report final total results
+        print("\n>> total leaked passwords: " + str(totalLeaked))
+
+    #through an error if entered file is not found
+    except (FileNotFoundError) as exception:
+        print("file not found!")
+
+else:
+    print(help)
