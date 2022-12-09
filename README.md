@@ -22,7 +22,7 @@ python requests library:
 
 #### example
 > \> python amipwned -p "password123" <br />
-> > python amipwned -p "passwords.txt"
+> \> python amipwned -p "passwords.txt"
 
 #### get help
 > \> python amipwned --help <br />
