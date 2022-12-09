@@ -17,13 +17,13 @@ python requests library:
 > python -m pip install requests
 
 # usage
-> python amipwned -p [PASSWORD]
+> python amipwned -p [PASSWORD] <br />
 > python amipwned -f [FILE]
 
 #### example
-> python amipwned -p "password123"
+> python amipwned -p "password123" <br />
 > python amipwned -p "passwords.txt"
 
 #### get help
-> python amipwned --help
+> python amipwned --help <br />
 > python amipwned -h
