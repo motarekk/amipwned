@@ -14,13 +14,13 @@ signature = ("""
   __ _ _ __ ___ (_)_ ____      ___ __   ___  __| |
  / _` | '_ ` _ \| | '_ \ \ /\ / / '_ \ / _ \/ _` |
 | (_| | | | | | | | |_) \ V  V /| | | |  __/ (_| |
- \__,_|_| |_| |_|_| .__/ \_/\_/ |_| |_|\___|\__,_|  v.30
+ \__,_|_| |_| |_|_| .__/ \_/\_/ |_| |_|\___|\__,_|  v.2.1
                   |_|                      motarek
 
                   """)
 
 description = "\nBY: Mohamed Tarek\nLinkedIn: https://www.linkedin.com/in/mohamed-tarek-159a821ba/\nGitHub: https://github.com/motarekk/amipwned\n\n>> Securely offline-check if your passwords have been leaked before\n"
-usage = """
+usage = f"""{signature}{description}
 python amipwned [-p PASSWORD]
 python amipwned [-f PASSWORDS_FILE]
 
@@ -32,7 +32,6 @@ python amipwned -f passwords.txt"""
 def parse_arguments():
     parser = ArgumentParser(
         description="Securely offline-check if your passwords have been leaked before BY: Mohamed Tarek",
-        usage=usage,
         add_help=True)
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-p', '--password', help='search for a single password')
@@ -95,7 +94,6 @@ def findPassword(password):
 
 if __name__ == "__main__":
     args = parse_arguments()
-    print(signature + description)
     if args.password:
         findPassword(args.password)
     elif args.file:
