@@ -1,11 +1,5 @@
-"""
-amipwned automates the process of using haveibeenpwned's API without exposing your passwords to the internet
-By: Mohamed Tarek - https://www.linkedin.com/in/mohamed-tarek-159a821ba/
-this is version 2.0 of the tool
-"""
-
-import hashlib
-import requests
+from hashlib import sha1
+from requests import get, Timeout
 from argparse import ArgumentParser
 
 # -------------------- variables --------------------#
@@ -21,12 +15,12 @@ signature = ("""
 
 description = "\nBY: Mohamed Tarek\nLinkedIn: https://www.linkedin.com/in/mohamed-tarek-159a821ba/\nGitHub: https://github.com/motarekk/amipwned\n\n>> Securely offline-check if your passwords have been leaked before\n"
 usage = f"""{signature}{description}
-python amipwned [-p PASSWORD]
-python amipwned [-f PASSWORDS_FILE]
+python3 amipwned [-p PASSWORD]
+python3 amipwned [-f PASSWORDS_FILE]
 
 > EXAMPLE: 
-python amipwned -p "helloworld"
-python amipwned -f passwords.txt"""
+python3 amipwned -p "hello world"
+python3 amipwned -f passwords.txt"""
 
 
 def parse_arguments():
@@ -45,53 +39,36 @@ totalLeaked = 0
 # -------------------- main function --------------------#
 def findPassword(password):
     # hash the password
-    hashed = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+    hashed = sha1(password.encode('utf-8')).hexdigest().upper()
 
     # take first 5 chars of hashed password
-    first5 = hashed[0:5]
-    remaining_hash = hashed[5:len(hashed)]
+    head = hashed[0:5]
+    tail = hashed[5:len(hashed)]
 
     try:
-        r = requests.get('https://api.pwnedpasswords.com/range/' + first5)
+        req = get('https://api.pwnedpasswords.com/range/' + head)
 
         # clean api response in array
-        mystr = r.content.decode("utf-8")
-        myarr = []
-        start = 0
-        n = 2
-
-        for i in mystr:
-            if n >= len(mystr):
-                break
-            if mystr[n] == '\r':
-                k = n
-                for charachter in range(2):
-                    mystr.replace(mystr[k], "")
-                    k = k + 1
-
-                myarr.append(mystr[start:n])
-                n = n + 2
-                start = n
-            else:
-                n = n + 1
+        req_content = req.content.decode("utf-8").replace('\r','').split('\n')
 
         # compare each hash in the response with the remaining hashed password
-        flag = 0
+        leaked = False
         global totalLeaked
-        for hash in myarr:
-            if hash[0:35] == remaining_hash:
+        for hash in req_content:
+            if hash[0:35] == tail:
                 totalLeaked += 1
                 print(password + " has been leaked " + hash[36:len(hash)] + " times")
-                flag = 1
+                leaked = True
 
-        if flag == 0:
+        if not leaked:
             print(password + " has been leaked 0 times")
 
     # through an error if not connected to the internet
-    except (requests.ConnectionError, requests.Timeout) as exception:
+    except (ConnectionError, Timeout) as exception:
         print("No internet connection!")
 
 
+# -------------------- output --------------------#
 if __name__ == "__main__":
     args = parse_arguments()
     if args.password:
