@@ -48,7 +48,7 @@ def findPassword(password):
     try:
         req = get('https://api.pwnedpasswords.com/range/' + head)
 
-        # clean api response in array
+        # clean api response
         req_content = req.content.decode("utf-8").replace('\r','').split('\n')
 
         # compare each hash in the response with the remaining hashed password
